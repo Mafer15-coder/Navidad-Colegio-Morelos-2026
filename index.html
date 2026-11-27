@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Felices Fiestas | Colegio Morelos Lizardi | Ferval</title>
+
+<style>
+body {
+    margin: 0;
+    background: #03132e;
+    font-family: Georgia, serif;
+}
+
+.tarjeta {
+    position: relative;
+    max-width: 750px;
+    margin: auto;
+    overflow: hidden;
+}
+
+.tarjeta img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.reproductor {
+    position: absolute;
+    left: 54%;
+    top: 88.5%;
+    width: 32%;
+    height: 6.5%;
+    background: transparent;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    z-index: 10;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.reproductor.activo {
+    animation: brillo 1.8s infinite alternate;
+}
+
+@keyframes brillo {
+    from {
+        box-shadow: 0 0 8px 2px #e8c477;
+    }
+    to {
+        box-shadow: 0 0 22px 5px #ffd700;
+    }
+}
+
+.copo {
+    position: absolute;
+    top: -20px;
+    color: white;
+    pointer-events: none;
+    animation: caer linear infinite;
+    z-index: 2;
+}
+
+@keyframes caer {
+    from {
+        transform: translateY(0) rotate(0deg);
+    }
+    to {
+        transform: translateY(var(--recorrido)) rotate(360deg);
+    }
+}
+
+.destello {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #fff4c4;
+    box-shadow: 0 0 12px 4px #ffc857;
+    pointer-events: none;
+    animation: iluminar 2s infinite alternate;
+}
+
+@keyframes iluminar {
+    from {
+        opacity: 0.1;
+        transform: scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1.4);
+    }
+}
+
+.creditos {
+    text-align: center;
+    color: #e7cb85;
+    font-size: 11px;
+    padding: 12px;
+    line-height: 1.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .copo, .destello {
+        display: none;
+    }
+
+    .reproductor.activo {
+        animation: none;
+        box-shadow: 0 0 12px #ffd700;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<main class="tarjeta" id="tarjeta">
+
+    <img src="navidad-morelos.png"
+         alt="Felices Fiestas a la comunidad educativa del Colegio Morelos Lizardi. Un obsequio de Ferval.">
+
+    <button id="boton"
+            class="reproductor"
+            aria-label="Reproducir música"
+            onclick="reproducir()">
+    </button>
+
+</main>
+
+<audio id="musica" loop preload="none">
+    <source src="navidad-musica.ogg" type="audio/ogg">
+</audio>
+
+<footer class="creditos">
+    Música: Jason Shaw / Audionautix
+    <br>
+    Un obsequio de Ferval Velas Artesanales
+    <br>
+    Navidad 2026
+</footer>
+
+<script>
+const musica = document.getElementById("musica");
+const boton = document.getElementById("boton");
+const tarjeta = document.getElementById("tarjeta");
+
+async function reproducir() {
+    if (musica.paused) {
+        try {
+            await musica.play();
+            boton.classList.add("activo");
+            boton.setAttribute("aria-label", "Pausar música");
+        } catch (error) {
+            alert("No se pudo reproducir la música.");
+        }
+    } else {
+        musica.pause();
+        boton.classList.remove("activo");
+        boton.setAttribute("aria-label", "Reproducir música");
+    }
+}
+
+// Nieve animada
+for (let i = 0; i < 25; i++) {
+    const copo = document.createElement("span");
+    copo.className = "copo";
+    copo.textContent = "❄";
+    copo.style.left = Math.random() * 100 + "%";
+    copo.style.fontSize = (5 + Math.random() * 9) + "px";
+    copo.style.opacity = 0.2 + Math.random() * 0.5;
+    copo.style.animationDuration = (10 + Math.random() * 12) + "s";
+    copo.style.animationDelay = (-Math.random() * 20) + "s";
+    tarjeta.appendChild(copo);
+}
+
+function ajustarNieve() {
+    tarjeta.style.setProperty(
+        "--recorrido",
+        (tarjeta.clientHeight + 40) + "px"
+    );
+}
+
+window.addEventListener("load", ajustarNieve);
+window.addEventListener("resize", ajustarNieve);
+
+// Destellos dorados en los bordes
+for (let i = 0; i < 16; i++) {
+    const luz = document.createElement("span");
+    luz.className = "destello";
+    const lado = Math.random() > 0.5;
+    luz.style.left = (lado
+        ? 88 + Math.random() * 10
+        : 2 + Math.random() * 10) + "%";
+    luz.style.top = Math.random() * 100 + "%";
+    luz.style.animationDelay = Math.random() * 3 + "s";
+    tarjeta.appendChild(luz);
+}
+</script>
+
+</body>
+</html>
